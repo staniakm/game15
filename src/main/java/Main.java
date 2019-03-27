@@ -5,34 +5,41 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Game g = new Game();
-        g.printBoard();
-        boolean endGame = false;
         Scanner sc = new Scanner(System.in);
-        do {
-            System.out.println("Enter index or 'K' for exit");
-            String s = sc.nextLine();
-            if (s.equalsIgnoreCase("k")) {
-                endGame = true;
-            } else {
-                try {
-                    g.move(s);
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input data");
-                }
-            }
+        Game game = new Game();
 
-            if (g.ifSuccess())
-                endGame = true;
+        playGame(sc, game);
 
-            g.printBoard();
-        } while (!endGame);
-
-        if (g.ifSuccess()) {
+        if (game.ifSuccess()) {
             System.out.println("Success");
         } else {
             System.out.println("Failure");
         }
 
+    }
+
+    private static void playGame(Scanner sc, Game game) {
+
+        game.printBoard();
+        boolean endGame = false;
+
+        do {
+            System.out.println("Enter index or 'K' for exit");
+            String tableCoord = sc.nextLine();
+            if (tableCoord.equalsIgnoreCase("K")) {
+                endGame = true;
+            } else {
+                try {
+                    game.move(tableCoord);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input data");
+                }
+            }
+
+            if (game.ifSuccess())
+                endGame = true;
+
+            game.printBoard();
+        } while (!endGame);
     }
 }

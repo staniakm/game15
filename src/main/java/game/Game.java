@@ -1,22 +1,34 @@
 package game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-@SuppressWarnings("WeakerAccess")
 public class Game {
 
     private GameNode topLeft;
     //list used as help in board creation process
     private List<GameNode> node = new ArrayList<>();
+    private Map<String, Integer> letterCoord = new HashMap<String, Integer>();
 
     public Game() {
+        prepareLetterCoords();
 
         for (int i = 0; i < 16; i++) {
             node.add(new GameNode(i));
         }
 
+        prepareBoard();
+
+        shuffleBoard();
+    }
+
+    private void prepareLetterCoords() {
+        letterCoord.put("a", 0);
+        letterCoord.put("b", 1);
+        letterCoord.put("c", 2);
+        letterCoord.put("d", 3);
+    }
+
+    private void prepareBoard() {
         topLeft = node.get(1);
 
         node.get(2).setRightNode(node.get(3));
@@ -49,16 +61,15 @@ public class Game {
         node.get(3).setBottomNode(node.get(7));
         node.get(11).setTopNode(node.get(7));
         node.get(12).setBottomNode(node.get(0));
-
-        shuffleBoard();
     }
 
     private void shuffleBoard() {
         GameNode zero = node.get(0);
-        Random r = new Random();
+        Random random = new Random();
+
         int direction;
-        for (int i = 0; i < 100; i++) {
-            direction = r.nextInt(4);
+        for (int shuffleStep = 0; shuffleStep < 100; shuffleStep++) {
+            direction = random.nextInt(4);
             if (direction == 0) {
                 //left
                 if (zero.getLeftNode() != null) {
@@ -89,7 +100,6 @@ public class Game {
 
     }
 
-
     public void printBoard() {
 
         StringBuilder sb = new StringBuilder("\n");
@@ -114,11 +124,11 @@ public class Game {
     }
 
     //helper for printing  board
-    private String getRight(StringBuilder sb, GameNode n) {
+    private String getRight(StringBuilder sb, GameNode node) {
 
-        if (n != null) {
-            sb.append(String.format("%02d", n.getValue())).append("|");
-            return getRight(sb, n.getRightNode());
+        if (node != null) {
+            sb.append(String.format("%02d", node.getValue())).append("|");
+            return getRight(sb, node.getRightNode());
         }
         return "";
     }
@@ -171,8 +181,6 @@ public class Game {
             }
 
         }
-
-
         return check == 4;
     }
 
@@ -181,45 +189,31 @@ public class Game {
 
         String[] split = move.split("");
         if (isCorrectLetter(split[0]) && isCorrectNumber(split[1])) {
-            int number = getNumber(split[0]);
+            int number = getCoordLetterToNumber(split[0]);
 
             if (!topLeft.moveNode(number, Integer.parseInt(split[1]) - 1)) {
 
                 System.out.println("\n" + move + " is incorrect move");
-            }else {
+            } else {
                 if (!(topLeft.getLeftNode() != null && topLeft.getTopNode() != null)) {
                     topLeft = topLeft.getNewTopleftNode();
                 }
             }
         } else {
-            System.out.println("incorrect coordinte");
+            System.out.println("incorrect coordinate");
         }
     }
 
-
-    private int getNumber(String s) {
-        switch (s.toLowerCase()) {
-            case "a":
-                return 0;
-            case "b":
-                return 1;
-            case "c":
-                return 2;
-            case "d":
-                return 3;
-        }
-        return -1;
+    private int getCoordLetterToNumber(String letter) {
+        return letterCoord.get(letter);
     }
 
-    private boolean isCorrectNumber(String p0) {
-
-        int i = Integer.parseInt(p0);
+    private boolean isCorrectNumber(String numberCoord) {
+        int i = Integer.parseInt(numberCoord);
         return i >= 1 && i <= 4;
     }
 
-    private boolean isCorrectLetter(String s) {
-        return s.equalsIgnoreCase("a") || s.equalsIgnoreCase("b")
-                || s.equalsIgnoreCase("c") || s.equalsIgnoreCase("d");
-
+    private boolean isCorrectLetter(String letter) {
+        return letterCoord.containsKey(letter);
     }
 }

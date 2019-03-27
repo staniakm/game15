@@ -1,10 +1,10 @@
 package game;
 
 class GameNode {
-        private GameNode leftNode;
-        private GameNode rightNode;
-        private GameNode topNode;
-        private GameNode bottomNode;
+    private GameNode leftNode;
+    private GameNode rightNode;
+    private GameNode topNode;
+    private GameNode bottomNode;
 
     private final int value;
 
@@ -14,70 +14,67 @@ class GameNode {
         this.value = value;
     }
 
-    private boolean isEmpty(){
+    private boolean isEmpty() {
         return value == 0;
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
-
-    public void setLeftNode(GameNode leftNode) {
+    void setLeftNode(GameNode leftNode) {
         this.leftNode = leftNode;
-        if (leftNode!=null)
-        leftNode.rightNode = this;
+        if (leftNode != null)
+            leftNode.rightNode = this;
     }
 
-    public void setRightNode(GameNode rightNode) {
+    void setRightNode(GameNode rightNode) {
         this.rightNode = rightNode;
-        if (rightNode!=null)
-        rightNode.leftNode = this;
+        if (rightNode != null)
+            rightNode.leftNode = this;
     }
 
-    public void setTopNode(GameNode topNode) {
+    void setTopNode(GameNode topNode) {
         this.topNode = topNode;
-        if (topNode!=null)
-        topNode.bottomNode = this;
+        if (topNode != null)
+            topNode.bottomNode = this;
     }
 
-    public void setBottomNode(GameNode bottomNode) {
+    void setBottomNode(GameNode bottomNode) {
         this.bottomNode = bottomNode;
-        if (bottomNode!=null)
-        bottomNode.topNode = this;
+        if (bottomNode != null)
+            bottomNode.topNode = this;
     }
 
-    public GameNode getLeftNode() {
+    GameNode getLeftNode() {
         return leftNode;
     }
 
-    public GameNode getRightNode() {
+    GameNode getRightNode() {
         return rightNode;
     }
 
-    public GameNode getTopNode() {
+    GameNode getTopNode() {
         return topNode;
     }
 
-    public GameNode getBottomNode() {
+    GameNode getBottomNode() {
         return bottomNode;
     }
 
-    public boolean moveNode(int number, int i){
+    boolean moveNode(int number, int i) {
         boolean status = false;
-        GameNode node = getNode(number,i);
-        if (node.getLeftNode()!=null && node.getLeftNode().isEmpty()){
+        GameNode node = getNode(number, i);
+        if (node.getLeftNode() != null && node.getLeftNode().isEmpty()) {
             node.moveLeft();
             status = true;
-        }else if (node.getRightNode()!=null && node.getRightNode().isEmpty()){
+        } else if (node.getRightNode() != null && node.getRightNode().isEmpty()) {
             node.moveRight();
             status = true;
-        }
-        else if (node.getTopNode()!=null && node.getTopNode().isEmpty()){
+        } else if (node.getTopNode() != null && node.getTopNode().isEmpty()) {
             node.moveTop();
             status = true;
-        }
-        else if (node.getBottomNode()!=null && node.getBottomNode().isEmpty()){
+        } else if (node.getBottomNode() != null && node.getBottomNode().isEmpty()) {
             node.moveBottom();
             status = true;
         }
@@ -151,58 +148,58 @@ class GameNode {
     }
 
     private GameNode getNode(int number, int i) {
-        if (number==0 && i==0){
+        if (number == 0 && i == 0) {
             return this;
-        }else {
-            if (number>0){
-               return this.getRightNode().getNode(number-1,i);
-            }else {
-              return this.getBottomNode().getNode(number,i-1);
+        } else {
+            if (number > 0) {
+                return this.getRightNode().getNode(number - 1, i);
+            } else {
+                return this.getBottomNode().getNode(number, i - 1);
             }
         }
     }
 
-    public void getCoordinate(GameNode topLeft) {
-        int letter=0;
-        int number=0;
+    void getCoordinate(GameNode topLeft) {
+        int letter = 0;
+        int number = 0;
         GameNode node = this;
-        while(node.getLeftNode()!=null){
+        while (node.getLeftNode() != null) {
             node = node.getLeftNode();
             letter++;
         }
-        while (node.getTopNode()!=null){
+        while (node.getTopNode() != null) {
             node = node.getTopNode();
             number++;
         }
 
-        topLeft.moveNode (letter,number);
+        topLeft.moveNode(letter, number);
 
     }
 
-    public GameNode getNewTopleftNode() {
-        int letter=0;
-        int number=0;
+    GameNode getNewTopleftNode() {
+        int letter = 0;
+        int number = 0;
         GameNode node = this;
-        while(node.getLeftNode()!=null){
+        while (node.getLeftNode() != null) {
             node = node.getLeftNode();
             letter++;
         }
-        while (node.getTopNode()!=null){
+        while (node.getTopNode() != null) {
             node = node.getTopNode();
             number++;
         }
-        return getTopNode(letter,number);
+        return getTopNode(letter, number);
 
     }
 
     private GameNode getTopNode(int number, int i) {
-        if (number==0 && i==0){
+        if (number == 0 && i == 0) {
             return this;
-        }else {
-            if (number>0){
-                return this.getLeftNode().getNode(number-1,i);
-            }else {
-                return this.getTopNode().getNode(number,i-1);
+        } else {
+            if (number > 0) {
+                return this.getLeftNode().getNode(number - 1, i);
+            } else {
+                return this.getTopNode().getNode(number, i - 1);
             }
         }
     }
